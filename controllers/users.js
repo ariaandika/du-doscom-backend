@@ -20,5 +20,28 @@ users.post('/', async (req,res) => {
     res.sendStatus(201)
 })
 
+users.get('/:id', async (req,res) => {
+    const id = parseInt(req.params.id)
+    const user = await prisma.users.findFirst({
+        where: { id },
+    })
+
+    if (!user) {
+        res.status(404)
+           .json({ error: true, message: "User tidak ditemukan" })
+        return
+    }
+
+    res.json(user)
+})
+
+users.put('/:id', async (req,res) => {
+    const id = parseInt(req.params.id)
+    await prisma.users.update({
+        data: req.body,
+        where: { id }
+    })
+    res.sendStatus(200)
+})
 
 
