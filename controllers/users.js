@@ -4,7 +4,12 @@ import { prisma } from "../lib/prisma.js"
 export const users = express.Router()
 
 users.get("/", async (req,res) => {
-    const users = await prisma.users.findMany()
+    let limit = req.query.limit
+    let page = req.query.page
+    const users = await prisma.users.findMany({
+        take: limit && parseInt(limit),
+        skip: page && parseInt(page)
+    })
     res.json(users)
 })
 
